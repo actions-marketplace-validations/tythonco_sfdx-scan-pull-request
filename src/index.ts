@@ -57,17 +57,21 @@ function initialSetup() {
     severityThreshold: parseInt(getInput("severity-threshold")) || 0,
     strictlyEnforcedRules: getInput("strictly-enforced-rules"),
     deleteResolvedComments: getInput("delete-resolved-comments") === "true",
-    target: context?.payload?.pull_request ? "" : getInput("target"),
+    target: (context?.payload?.pull_request || context?.payload?.issue?.pull_request) ? "" : getInput("target"),
   };
 
   const reporterParams = {
     inputs,
     context,
   };
-
+  console.log('Info...');
+  console.log(context);
+  console.log(context?.payload);
+  console.log(context?.payload?.issue);
+  console.log(context?.payload?.issue?.pull_request);
   return {
     inputs,
-    pullRequest: context?.payload?.pull_request,
+    pullRequest: context?.payload?.pull_request || context?.payload?.issue?.pull_request,
     scannerFlags,
     reporter:
       inputs.reportMode === "comments"
